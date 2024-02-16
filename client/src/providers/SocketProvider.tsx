@@ -11,7 +11,7 @@ const SocketProvider: React.FC<React.PropsWithChildren> = ({
 
     const [socket, setSocket] = React.useState<Socket | null>(null);
 
-    const socketUrl = `${import.meta.env.VITE_API_URL as string || window.location.href}`
+    const socketUrl = `${import.meta.env.VITE_API_URL as string || window.location.origin}`
 
     React.useEffect(() => {
         setSocket(io(socketUrl.replace('http', 'ws'), {
