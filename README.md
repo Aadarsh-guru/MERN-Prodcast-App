@@ -1,4 +1,4 @@
-# MERN Product Application
+# MERN Podcast Application
 
 MERN Product Application is a state-of-the-art platform that showcases the power of modern web technologies. It utilizes the MERN stack (MongoDB, Express.js, React, Node.js), TypeScript, Vite bundler, and Tailwind CSS to deliver a seamless user experience.
 
