@@ -14,7 +14,7 @@ class AuthController {
             if (!email) {
                 return response.status(400).json({
                     success: false,
-                    message: '10 digit phone number is required along with county code.'
+                    message: 'Email is required.'
                 });
             }
             const otp = otpService.generateOTP();
