@@ -1,12 +1,13 @@
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { otpTemplate } from '../constants/mail.templates';
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.GMAIL_MAIL_USER_ID as string,
-        pass: process.env.GMAIL_MAIL_USER_PASSWORD as string
+// Initialize the SES client
+const sesClient = new SESClient({
+    region: process.env.AWS_REGION as string,
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY as string,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
     },
 });
 
@@ -23,12 +24,22 @@ class OTPService {
 
     public async sendOTP(to: string, otp: number) {
         try {
-            return await transporter.sendMail({
-                from: process.env.GMAIL_MAIL_USER_ID as string,
-                to,
-                subject: 'Verify Your email.',
-                html: otpTemplate(otp)
-            });
+            const params = {
+                Destination: {
+                    ToAddresses: [to],
+                },
+                Message: {
+                    Body: {
+                        Html: {
+                            Data: otpTemplate(otp),
+                        },
+                    },
+                    Subject: { Data: 'Verify Your email.' },
+                },
+                Source: process.env.ADMIN_EMAIL_ADDRESS as string,
+            };
+            const command = new SendEmailCommand(params);
+            return await sesClient.send(command);
         } catch (error) {
             throw error;
         }
